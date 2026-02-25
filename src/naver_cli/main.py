@@ -1,14 +1,16 @@
 import typer
 from rich.console import Console
 
+from naver_cli import __version__
 from naver_cli.commands import blog, book, cafe, local, news, shopping
 
 BANNER = r"""
- _   _    _    __     __ _____ ____       ____  _     ___
-| \ | |  / \   \ \   / /| ____|  _ \     / ___|| |   |_ _|
-|  \| | / _ \   \ \ / / |  _| | |_) |   | |   | |    | |
-| |\  |/ ___ \   \ V /  | |___|  _ <    | |___| |___ | |
-|_| \_/_/   \_\   \_/   |_____|_| \_\    \____|_____|___|
+ ███╗   ██╗ █████╗ ██╗   ██╗███████╗██████╗      ██████╗██╗     ██╗
+ ████╗  ██║██╔══██╗██║   ██║██╔════╝██╔══██╗    ██╔════╝██║     ██║
+ ██╔██╗ ██║███████║██║   ██║█████╗  ██████╔╝    ██║     ██║     ██║
+ ██║╚██╗██║██╔══██║╚██╗ ██╔╝██╔══╝  ██╔══██╗    ██║     ██║     ██║
+ ██║ ╚████║██║  ██║ ╚████╔╝ ███████╗██║  ██║    ╚██████╗███████╗██║
+ ╚═╝  ╚═══╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝     ╚═════╝╚══════╝╚═╝
 """
 
 console = Console()
@@ -19,8 +21,8 @@ app = typer.Typer(help="네이버 오픈 API CLI 도구", invoke_without_command
 def main(context: typer.Context) -> None:
     """네이버 오픈 API CLI 도구."""
     if context.invoked_subcommand is None:
-        console.print(BANNER, style="bold green")
-        console.print("  네이버 오픈 API CLI 도구\n", style="bold")
+        console.print(f"[#2DB400]{BANNER}[/#2DB400]")
+        console.print(f"  [dim]v{__version__}[/dim]\n")
         console.print("  사용법: [cyan]naver --help[/cyan] 로 도움말을 확인하세요.\n")
 
 

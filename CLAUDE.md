@@ -31,7 +31,8 @@ uv run naver --help             # CLI 도움말
 
 ## 설정
 
-- 환경 변수: `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` (.env 파일)
+- 환경 변수: `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`
+  - 셸 환경변수 직접 설정 또는 현재 작업 디렉토리의 `.env` 파일에서 로딩
 - CLI 엔트리포인트: `naver`, `naver-cli` (pyproject.toml `[project.scripts]`)
 
 ## API 참조

@@ -141,7 +141,7 @@ wheels = [
 
 [[package]]
 name = "naver-cli"
-version = "0.1.0"
+version = "2026.2.25"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },

@@ -35,8 +35,8 @@ API 클라이언트 (client.py)
 
 ### 4. 설정 (`config.py`)
 
-- python-dotenv로 `.env` 파일에서 API 키 로딩
-- 환경 변수 기반 설정 관리
+- 셸 환경변수 또는 python-dotenv로 현재 작업 디렉토리의 `.env` 파일에서 API 키 로딩
+- pip 설치 시에는 셸 환경변수 직접 설정 권장
 
 ## 확장 방법
 

@@ -35,7 +35,20 @@ uv run naver-cli --help
 
 ## 설정
 
-`.env.example`을 복사하여 `.env` 파일을 생성하고 API 키를 설정한다.
+네이버 개발자 센터(https://developers.naver.com)에서 애플리케이션을 등록하고 Client ID/Secret을 발급받는다.
+
+### 방법 1: 셸 환경변수 (pip 설치 시 권장)
+
+`~/.zshrc` 또는 `~/.bashrc`에 추가한다.
+
+```bash
+export NAVER_CLIENT_ID=your_client_id_here
+export NAVER_CLIENT_SECRET=your_client_secret_here
+```
+
+### 방법 2: .env 파일 (개발 시 권장)
+
+`.env.example`을 복사하여 프로젝트 루트에 `.env` 파일을 생성한다.
 
 ```bash
 cp .env.example .env
@@ -46,7 +59,7 @@ NAVER_CLIENT_ID=your_client_id_here
 NAVER_CLIENT_SECRET=your_client_secret_here
 ```
 
-네이버 개발자 센터(https://developers.naver.com)에서 애플리케이션을 등록하고 Client ID/Secret을 발급받는다.
+> `.env` 파일은 CLI를 실행하는 현재 작업 디렉토리에서 로딩된다.
 
 ## 사용법
 

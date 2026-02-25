@@ -1,6 +1,6 @@
 [project]
 name = "naver-cli"
-version = "0.1.0"
+version = "2026.02.25"
 description = "네이버 오픈 API CLI 도구"
 readme = "README.md"
 requires-python = ">=3.12"
