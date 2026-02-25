@@ -14,9 +14,11 @@ API 클라이언트 (client.py)
 데이터 모델 (models.py)
 ```
 
-### 1. CLI 레이어 (`commands/`)
+### 1. CLI 레이어 (`main.py`, `commands/`)
 
 - Typer 기반 커맨드 정의
+- `main.py`: 앱 엔트리포인트, ASCII 배너 표시 (서브커맨드 없이 실행 시), 서브커맨드 등록
+- `commands/`: 6종 검색 커맨드 (local, book, blog, cafe, news, shopping)
 - 사용자 입력 검증 및 출력 포매팅
 - 출력 형식: text (rich 테이블), markdown, json
 

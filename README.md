@@ -130,7 +130,7 @@ naver-cli/
 ├── .env.example
 ├── src/
 │   └── naver_cli/
-│       ├── main.py           # Typer 앱 엔트리포인트
+│       ├── main.py           # Typer 앱 엔트리포인트 (ASCII 배너)
 │       ├── client.py         # 네이버 API HTTP 클라이언트
 │       ├── config.py         # 설정 관리 (API 키 로딩)
 │       ├── models.py         # 응답 데이터 모델 (Pydantic)
