@@ -8,43 +8,41 @@ from rich.table import Table
 from naver_cli.client import NaverApiError, NaverClient
 from naver_cli.commands import OutputFormat
 from naver_cli.config import validate_credentials
-from naver_cli.models import LocalSearchResponse
+from naver_cli.models import ShoppingSearchResponse
 
-app = typer.Typer(help="네이버 지역 검색")
+app = typer.Typer(help="네이버 쇼핑 검색")
 console = Console()
 
 
-def _print_as_text(query: str, result: LocalSearchResponse) -> None:
+def _print_as_text(query: str, result: ShoppingSearchResponse) -> None:
     """rich 테이블 형태로 출력한다."""
-    table = Table(title=f"'{query}' 지역 검색 결과 (총 {result.total}건)")
-    table.add_column("이름", style="bold cyan", no_wrap=True)
-    table.add_column("카테고리", style="green")
-    table.add_column("도로명 주소")
-    table.add_column("전화번호", style="yellow")
+    table = Table(title=f"'{query}' 쇼핑 검색 결과 (총 {result.total}건)")
+    table.add_column("상품명", style="bold cyan", no_wrap=True)
+    table.add_column("최저가", style="yellow")
+    table.add_column("쇼핑몰", style="green")
+    table.add_column("브랜드")
 
     for item in result.items:
-        address = item.road_address or item.address
-        table.add_row(item.title, item.category, address, item.telephone)
+        table.add_row(item.title, item.lprice, item.mall_name, item.brand)
 
     console.print(table)
 
 
-def _print_as_markdown(query: str, result: LocalSearchResponse) -> None:
+def _print_as_markdown(query: str, result: ShoppingSearchResponse) -> None:
     """마크다운 테이블 형태로 출력한다."""
     lines = [
-        f"### '{query}' 지역 검색 결과 (총 {result.total}건)",
+        f"### '{query}' 쇼핑 검색 결과 (총 {result.total}건)",
         "",
-        "| 이름 | 카테고리 | 도로명 주소 | 전화번호 |",
-        "|------|----------|-------------|----------|",
+        "| 상품명 | 최저가 | 쇼핑몰 | 브랜드 |",
+        "|--------|--------|--------|--------|",
     ]
     for item in result.items:
-        address = item.road_address or item.address
-        lines.append(f"| {item.title} | {item.category} | {address} | {item.telephone} |")
+        lines.append(f"| {item.title} | {item.lprice} | {item.mall_name} | {item.brand} |")
 
     console.print("\n".join(lines))
 
 
-def _print_as_json(result: LocalSearchResponse) -> None:
+def _print_as_json(result: ShoppingSearchResponse) -> None:
     """JSON 형태로 출력한다."""
     data = {
         "total": result.total,
@@ -53,14 +51,19 @@ def _print_as_json(result: LocalSearchResponse) -> None:
         "items": [
             {
                 "title": item.title,
-                "category": item.category,
-                "address": item.address,
-                "road_address": item.road_address,
-                "telephone": item.telephone,
                 "link": item.link,
-                "description": item.description,
-                "mapx": item.mapx,
-                "mapy": item.mapy,
+                "image": item.image,
+                "lprice": item.lprice,
+                "hprice": item.hprice,
+                "mall_name": item.mall_name,
+                "product_id": item.product_id,
+                "product_type": item.product_type,
+                "brand": item.brand,
+                "maker": item.maker,
+                "category1": item.category1,
+                "category2": item.category2,
+                "category3": item.category3,
+                "category4": item.category4,
             }
             for item in result.items
         ],
@@ -71,14 +74,17 @@ def _print_as_json(result: LocalSearchResponse) -> None:
 @app.command()
 def search(
     query: Annotated[str, typer.Argument(help="검색어")],
-    display: Annotated[int, typer.Option(help="검색 결과 출력 건수 (1~5)")] = 5,
+    display: Annotated[int, typer.Option(help="검색 결과 출력 건수 (1~100)")] = 10,
     start: Annotated[int, typer.Option(help="검색 시작 위치")] = 1,
-    sort: Annotated[str, typer.Option(help="정렬 (random: 정확도순, comment: 리뷰순)")] = "random",
+    sort: Annotated[
+        str,
+        typer.Option(help="정렬 (sim: 정확도순, date: 날짜순, asc: 가격낮은순, dsc: 가격높은순)"),
+    ] = "sim",
     output_format: Annotated[
         OutputFormat, typer.Option("--format", help="출력 형식 (text, markdown, json)")
     ] = OutputFormat.TEXT,
 ) -> None:
-    """네이버 지역 검색을 수행한다."""
+    """네이버 쇼핑 검색을 수행한다."""
     if not validate_credentials():
         console.print("[red]NAVER_CLIENT_ID와 NAVER_CLIENT_SECRET 환경 변수를 설정해주세요.[/red]")
         raise typer.Exit(code=1)
@@ -86,7 +92,7 @@ def search(
     client = NaverClient()
 
     try:
-        result = client.search_local(query=query, display=display, start=start, sort=sort)
+        result = client.search_shopping(query=query, display=display, start=start, sort=sort)
     except NaverApiError as error:
         console.print(f"[red]API 오류: {error}[/red]")
         raise typer.Exit(code=1) from error
