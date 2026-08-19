@@ -17,8 +17,25 @@ console = Console()
 app = typer.Typer(help="네이버 오픈 API CLI 도구", invoke_without_command=True)
 
 
+def _print_version(value: bool) -> None:
+    """Plain `name version` on stdout — HEG-406 needs it machine-readable so
+    the monthly dependency audit can diff installed CLIs against upstream."""
+    if value:
+        print(f"naver-cli {__version__}")
+        raise typer.Exit()
+
+
 @app.callback()
-def main(context: typer.Context) -> None:
+def main(
+    context: typer.Context,
+    version: bool = typer.Option(
+        False,
+        "--version",
+        callback=_print_version,
+        is_eager=True,
+        help="버전을 출력하고 종료합니다.",
+    ),
+) -> None:
     """네이버 오픈 API CLI 도구."""
     if context.invoked_subcommand is None:
         console.print(f"[#2DB400]{BANNER}[/#2DB400]")
