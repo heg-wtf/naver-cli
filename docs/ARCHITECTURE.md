@@ -18,7 +18,9 @@ API 클라이언트 (client.py)
 
 - Typer 기반 커맨드 정의
 - `main.py`: 앱 엔트리포인트, ASCII 배너 표시 (서브커맨드 없이 실행 시), 서브커맨드 등록
-- `commands/`: 6종 검색 커맨드 (local, book, blog, cafe, news, shopping)
+- `commands/`: 4종 검색 커맨드 (local, blog, cafe, news)
+- `commands/discontinued.py`: 네이버가 2026-07-31에 종료한 책·쇼핑 검색의 안내 스텁 —
+  `book`/`shopping` 서브커맨드는 종료 안내를 출력하고 exit 1로 끝난다
 - 사용자 입력 검증 및 출력 포매팅
 - 출력 형식: text (rich 테이블), markdown, json
 

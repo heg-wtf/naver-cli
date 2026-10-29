@@ -70,13 +70,6 @@ naver-cli local search "강남역 맛집"
 naver-cli local search "판교 카페" --display 3 --sort comment
 ```
 
-### 책 검색
-
-```bash
-naver-cli book search "파이썬"
-naver-cli book search "파이썬" --display 20 --sort date
-```
-
 ### 블로그 검색
 
 ```bash
@@ -98,12 +91,12 @@ naver-cli news search "경제"
 naver-cli news search "경제" --sort date --display 20
 ```
 
-### 쇼핑 검색
+### 종료된 검색 (책·쇼핑)
 
-```bash
-naver-cli shopping search "노트북"
-naver-cli shopping search "노트북" --sort asc  # 가격 낮은순
-```
+네이버가 2026-07-31에 책·쇼핑·전문자료 검색 API를 종료했고 대체 API는 없다
+(https://developers.naver.com/notice/article/32564). `book search`와 `shopping search`는
+종료 안내를 출력하고 exit code 1로 끝난다. 책은 서점 사이트, 상품·가격은 쇼핑몰이나
+다른 가격 비교 도구를 사용한다.
 
 ### 출력 형식
 
@@ -129,11 +122,9 @@ naver-cli local search "강남역 맛집" --format json       # JSON
 | 타입 | 정렬 옵션 |
 |------|-----------|
 | local | `random` (정확도순), `comment` (리뷰순) |
-| book | `sim` (정확도순), `date` (출간일순), `count` (판매량순) |
 | blog | `sim` (정확도순), `date` (날짜순) |
 | cafe | `sim` (정확도순), `date` (날짜순) |
 | news | `sim` (정확도순), `date` (날짜순) |
-| shopping | `sim` (정확도순), `date` (날짜순), `asc` (가격낮은순), `dsc` (가격높은순) |
 
 ## 프로젝트 구조
 
@@ -150,35 +141,30 @@ naver-cli/
 │       └── commands/
 │           ├── __init__.py   # OutputFormat 공통 모듈
 │           ├── local.py      # 지역 검색 커맨드
-│           ├── book.py       # 책 검색 커맨드
+│           ├── book.py       # 책 검색 — 종료 안내 스텁
 │           ├── blog.py       # 블로그 검색 커맨드
 │           ├── cafe.py       # 카페글 검색 커맨드
 │           ├── news.py       # 뉴스 검색 커맨드
-│           └── shopping.py   # 쇼핑 검색 커맨드
+│           ├── shopping.py   # 쇼핑 검색 — 종료 안내 스텁
+│           └── discontinued.py  # 종료된 API 안내 공통 모듈
 └── tests/
     ├── conftest.py
     ├── test_client.py
     ├── test_models.py
     └── test_commands/
         ├── test_local.py
-        ├── test_book.py
         ├── test_blog.py
         ├── test_cafe.py
         ├── test_news.py
-        └── test_shopping.py
+        └── test_discontinued.py
 ```
 
 ## 개발
 
 ```bash
-# 테스트
-uv run pytest -v
-
-# 린트
-uv run ruff check src/ tests/
-
-# 포맷
-uv run ruff format src/ tests/
+make test     # 테스트
+make lint     # 포맷 + 린트 (ruff)
+make help     # 전체 타겟
 ```
 
 ## 라이선스

@@ -6,16 +6,12 @@ from naver_cli.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 from naver_cli.models import (
     BlogSearchItem,
     BlogSearchResponse,
-    BookSearchItem,
-    BookSearchResponse,
     CafeSearchItem,
     CafeSearchResponse,
     LocalSearchItem,
     LocalSearchResponse,
     NewsSearchItem,
     NewsSearchResponse,
-    ShoppingSearchItem,
-    ShoppingSearchResponse,
 )
 
 BASE_URL = "https://openapi.naver.com/v1/search"
@@ -127,46 +123,6 @@ class NaverClient:
             ],
         )
 
-    def search_book(
-        self,
-        query: str,
-        display: int = 10,
-        start: int = 1,
-        sort: str = "sim",
-    ) -> BookSearchResponse:
-        """책 검색 API를 호출한다.
-
-        Args:
-            query: 검색어
-            display: 검색 결과 출력 건수 (1~100)
-            start: 검색 시작 위치
-            sort: 정렬 옵션 (sim: 정확도순, date: 출간일순, count: 판매량순)
-
-        Returns:
-            책 검색 응답 결과
-        """
-        data = self._search("book.json", query, display, start, sort)
-        return BookSearchResponse(
-            last_build_date=data.get("lastBuildDate", ""),
-            total=data.get("total", 0),
-            start=data.get("start", 0),
-            display=data.get("display", 0),
-            items=[
-                BookSearchItem(
-                    title=item.get("title", ""),
-                    link=item.get("link", ""),
-                    image=item.get("image", ""),
-                    author=item.get("author", ""),
-                    discount=item.get("discount", ""),
-                    publisher=item.get("publisher", ""),
-                    pubdate=item.get("pubdate", ""),
-                    isbn=item.get("isbn", ""),
-                    description=item.get("description", ""),
-                )
-                for item in data.get("items", [])
-            ],
-        )
-
     def search_blog(
         self,
         query: str,
@@ -271,51 +227,6 @@ class NaverClient:
                     link=item.get("link", ""),
                     description=item.get("description", ""),
                     pub_date=item.get("pubDate", ""),
-                )
-                for item in data.get("items", [])
-            ],
-        )
-
-    def search_shopping(
-        self,
-        query: str,
-        display: int = 10,
-        start: int = 1,
-        sort: str = "sim",
-    ) -> ShoppingSearchResponse:
-        """쇼핑 검색 API를 호출한다.
-
-        Args:
-            query: 검색어
-            display: 검색 결과 출력 건수 (1~100)
-            start: 검색 시작 위치
-            sort: 정렬 옵션 (sim: 정확도순, date: 날짜순, asc: 가격낮은순, dsc: 가격높은순)
-
-        Returns:
-            쇼핑 검색 응답 결과
-        """
-        data = self._search("shop.json", query, display, start, sort)
-        return ShoppingSearchResponse(
-            last_build_date=data.get("lastBuildDate", ""),
-            total=data.get("total", 0),
-            start=data.get("start", 0),
-            display=data.get("display", 0),
-            items=[
-                ShoppingSearchItem(
-                    title=item.get("title", ""),
-                    link=item.get("link", ""),
-                    image=item.get("image", ""),
-                    lprice=item.get("lprice", ""),
-                    hprice=item.get("hprice", ""),
-                    mall_name=item.get("mallName", ""),
-                    product_id=item.get("productId", ""),
-                    product_type=item.get("productType", ""),
-                    brand=item.get("brand", ""),
-                    maker=item.get("maker", ""),
-                    category1=item.get("category1", ""),
-                    category2=item.get("category2", ""),
-                    category3=item.get("category3", ""),
-                    category4=item.get("category4", ""),
                 )
                 for item in data.get("items", [])
             ],

@@ -5,12 +5,10 @@ from naver_cli.client import NaverApiError, NaverClient
 
 from .conftest import (
     SAMPLE_BLOG_RESPONSE,
-    SAMPLE_BOOK_RESPONSE,
     SAMPLE_CAFE_RESPONSE,
     SAMPLE_ERROR_RESPONSE,
     SAMPLE_LOCAL_RESPONSE,
     SAMPLE_NEWS_RESPONSE,
-    SAMPLE_SHOPPING_RESPONSE,
 )
 
 
@@ -60,38 +58,6 @@ class TestNaverClient:
 
         assert exception_information.value.error_code == "SE01"
         assert exception_information.value.status_code == 400
-
-
-class TestSearchBook:
-    def setup_method(self) -> None:
-        self.client = NaverClient(client_id="test_id", client_secret="test_secret")
-
-    def test_search_book_success(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(json=SAMPLE_BOOK_RESPONSE)
-
-        result = self.client.search_book(query="파이썬")
-
-        assert result.total == 1
-        assert len(result.items) == 1
-        assert result.items[0].title == "파이썬 프로그래밍"
-        assert result.items[0].author == "홍길동"
-
-    def test_search_book_sends_parameters(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(json=SAMPLE_BOOK_RESPONSE)
-
-        self.client.search_book(query="파이썬", display=20, start=1, sort="date")
-
-        request = httpx_mock.get_request()
-        assert request is not None
-        assert request.url.params["query"] == "파이썬"
-        assert request.url.params["display"] == "20"
-        assert request.url.params["sort"] == "date"
-
-    def test_search_book_api_error(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(status_code=400, json=SAMPLE_ERROR_RESPONSE)
-
-        with pytest.raises(NaverApiError):
-            self.client.search_book(query="")
 
 
 class TestSearchBlog:
@@ -182,34 +148,3 @@ class TestSearchNews:
 
         with pytest.raises(NaverApiError):
             self.client.search_news(query="")
-
-
-class TestSearchShopping:
-    def setup_method(self) -> None:
-        self.client = NaverClient(client_id="test_id", client_secret="test_secret")
-
-    def test_search_shopping_success(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(json=SAMPLE_SHOPPING_RESPONSE)
-
-        result = self.client.search_shopping(query="노트북")
-
-        assert result.total == 1
-        assert result.items[0].title == "노트북 프로"
-        assert result.items[0].mall_name == "테스트몰"
-
-    def test_search_shopping_sends_parameters(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(json=SAMPLE_SHOPPING_RESPONSE)
-
-        self.client.search_shopping(query="노트북", display=50, sort="asc")
-
-        request = httpx_mock.get_request()
-        assert request is not None
-        assert request.url.params["query"] == "노트북"
-        assert request.url.params["display"] == "50"
-        assert request.url.params["sort"] == "asc"
-
-    def test_search_shopping_api_error(self, httpx_mock: HTTPXMock) -> None:
-        httpx_mock.add_response(status_code=400, json=SAMPLE_ERROR_RESPONSE)
-
-        with pytest.raises(NaverApiError):
-            self.client.search_shopping(query="")
